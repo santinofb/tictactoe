@@ -77,8 +77,25 @@ function App() {
     }
   }
 
+// TODO: Agregar funcionalidad de volumen
+
   return (
     <main className="w-fit mx-auto my-10 text-center">
+      <section className="flex justify-center m-auto w-fit relative rounded-lg gap-2.5">
+        <button 
+            className="w-25 py-2 px-3 my-4 mx-auto bg-transparent border-2 border-solid dark:border-gray-200 border-gray-800 rounded-md font-bold cursor-pointer hover:dark:bg-white/80 hover:bg-black/80 hover:dark:text-gray-800 hover:text-gray-200 transition-all duration-200"
+            onClick={resetGame}
+          >
+          Reset
+        </button>
+
+        <button 
+            className="w-fit py-2 px-4 my-4 mx-auto bg-transparent border-2 border-solid dark:border-gray-200 border-gray-800 rounded-md font-bold cursor-pointer hover:dark:bg-white/80 hover:bg-black/80 hover:dark:text-gray-800 hover:text-gray-200 transition-all duration-200"
+          >
+          V
+        </button>
+      </section>
+
       <section className="grid grid-cols-3 gap-2.5">
         {
           board.map((_, index) => {
@@ -108,16 +125,16 @@ function App() {
         winner !== null && (
           <section className="absolute w-[100vw] h-[100vh] top-0 left-0 grid place-items-center dark:bg-[rgba(0,0,0,0.7)] bg-[rgba(114,114,114,0.7)]">
             <div className="dark:bg-[#111] bg-white/80 backdrop-blur w-80 h-80 border-2 border-solid dark:border-gray-200 border-gray-800 rounded-xl flex flex-col justify-center items-center gap-5">
-              <h2>
+              <h2 className="text-3xl font-semibold">
                 {
                   winner === false
-                    ? 'Empate'
-                    : `Ganador:`
+                    ? 'Draw'
+                    : `Winner!`
                 }
               </h2>
 
               <header className="my-0 mx-auto w-fit rounded-xl flex gap-4">
-                {winner && <Square>{winner}</Square>}
+                {winner && <Square isSelected={true}>{winner}</Square>}
               </header>
 
               <footer>
@@ -125,7 +142,7 @@ function App() {
                     className="w-25 py-2 px-3 m-6 bg-transparent border-2 border-solid dark:border-gray-200 border-gray-800 rounded-md font-bold cursor-pointer hover:dark:bg-gray-200 hover:bg-gray-800 hover:dark:text-gray-800 hover:text-gray-200 transition-all duration-200"
                     onClick={resetGame}
                 >
-                  Reiniciar
+                  Reset
                 </button>
               </footer>
             </div>
