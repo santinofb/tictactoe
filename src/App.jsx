@@ -9,8 +9,13 @@ const Square = ({ children, isSelected, isUnselected, updateBoard, index }) => {
   const className = `size-24 border-2 border-solid dark:border-gray-200 border-gray-800 rounded-md grid place-items-center cursor-pointer text-5xl 
       ${isSelected ? 'bg-blue-300 dark:bg-blue-500 dark:border-transparent border-transparent text-[40px] size-[70px]' : ''} 
       ${isUnselected ? 'dark:border-transparent border-transparent text-[40px] size-[70px]' : ''}`
+
+const handleClick = () => {
+  updateBoard(index)
+}
+
   return (
-    <div className={className}>
+    <div onClick={handleClick} className={className}>
       {children}
     </div>
   )
@@ -22,6 +27,17 @@ function App() {
   )
   const [turn, setTurn] = useState(TURNS.X)
 
+  const updateBoard = (index) => {
+    if (board[index]) return
+
+    const newBoard = [...board]
+    newBoard[index] = turn
+    setBoard(newBoard)
+
+    const newTurn = turn === TURNS.X ? TURNS.O : TURNS.X
+    setTurn(newTurn)
+  }
+
   return (
     <main className="w-fit mx-auto my-10 text-center">
       <section className="grid grid-cols-3 gap-2.5">
@@ -31,6 +47,7 @@ function App() {
               <Square
                 key={index}
                 index={index}
+                updateBoard={updateBoard}
               >
                 {board[index]}
               </Square>
