@@ -5,6 +5,17 @@ const TURNS = {
   O: '◯'
 }
 
+const WINNER_COMBOS = [
+  [0, 1, 2],
+  [3, 4, 5],
+  [6, 7, 8],
+  [0, 3, 6],
+  [1, 4, 7],
+  [2, 5, 8],
+  [0, 4, 8],
+  [2, 4, 6]
+]
+
 const Square = ({ children, isSelected, isUnselected, updateBoard, index }) => {
   const className = `size-24 border-2 border-solid dark:border-gray-200 border-gray-800 rounded-md grid place-items-center cursor-pointer text-5xl 
       ${isSelected ? 'bg-blue-300 dark:bg-blue-500 dark:border-transparent border-transparent text-[40px] size-[70px]' : ''} 
@@ -27,6 +38,29 @@ function App() {
   )
   const [turn, setTurn] = useState(TURNS.X)
 
+  const [winner, setWinner] = useState(null)
+
+  const checkWinner = (boardToCheck) => {
+    for (const combo of WINNER_COMBOS) {
+      const [a, b, c] = combo
+      if (
+        boardToCheck[a] &&
+        boardToCheck[a] === boardToCheck[b] &&
+        boardToCheck[a] === boardToCheck[c]
+      ) {
+        return boardToCheck[a]
+      }
+    }
+
+    return null
+  }
+
+  const resetGame = () => {
+    setBoard(Array(9).fill(null))
+    setTurn(TURNS.X)
+    setWinner(null)
+  }
+
   const updateBoard = (index) => {
     if (board[index]) return
 
@@ -36,6 +70,11 @@ function App() {
 
     const newTurn = turn === TURNS.X ? TURNS.O : TURNS.X
     setTurn(newTurn)
+
+    const newWinner = checkWinner(newBoard)
+    if (newWinner) {
+      setWinner(newWinner)
+    }
   }
 
   return (
@@ -64,6 +103,35 @@ function App() {
           {TURNS.O}
         </Square>
       </section>
+
+      {
+        winner !== null && (
+          <section className="absolute w-[100vw] h-[100vh] top-0 left-0 grid place-items-center dark:bg-[rgba(0,0,0,0.7)] bg-[rgba(114,114,114,0.7)]">
+            <div className="dark:bg-[#111] bg-white/80 backdrop-blur w-80 h-80 border-2 border-solid dark:border-gray-200 border-gray-800 rounded-xl flex flex-col justify-center items-center gap-5">
+              <h2>
+                {
+                  winner === false
+                    ? 'Empate'
+                    : `Ganador:`
+                }
+              </h2>
+
+              <header className="my-0 mx-auto w-fit rounded-xl flex gap-4">
+                {winner && <Square>{winner}</Square>}
+              </header>
+
+              <footer>
+                <button 
+                    className="w-25 py-2 px-3 m-6 bg-transparent border-2 border-solid dark:border-gray-200 border-gray-800 rounded-md font-bold cursor-pointer hover:dark:bg-gray-200 hover:bg-gray-800 hover:dark:text-gray-800 hover:text-gray-200 transition-all duration-200"
+                    onClick={resetGame}
+                >
+                  Reiniciar
+                </button>
+              </footer>
+            </div>
+          </section>
+        )
+      }
     </main>
   )
 }
